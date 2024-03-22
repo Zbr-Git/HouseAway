@@ -2,11 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 
 const app = express();
 const path = require('path');
-const { title } = require('process');
-const { log } = require('console');
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/listingdb';
 
@@ -15,14 +14,21 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  try {
+    await mongoose.connect(MONGO_URL);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+  }
 }
 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); // so you can render('index')
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+// use ejs-locals for all ejs templates:
+app.engine('ejs', ejsMate);
 
 app.get('/', (req, res) => {
   res.send('working');

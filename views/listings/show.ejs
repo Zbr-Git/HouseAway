@@ -1,24 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h3>Listing Details :</h3>
-    <ul>
-      <li><%= listing.title %></li>
-      <li><%= listing.description %></li>
-      <li>&#x20A8;.<%= listing.price.toLocaleString("en-PK") %></li>
-      <li><%= listing.location %></li>
-      <li><%= listing.country %></li>
-    </ul>
+<% layout("/layouts/boilerplate")-%>
+<div class="row mt-3">
+  <div class="col-8 offset-3">
+    <h3>Listing Details</h3>
+  </div>
+  <div class="card col-6 offset-3 show-card">
+    <img
+      src="<%= listing.image %>"
+      class="card-img-top show-img"
+      alt="listing_image"
+    />
+    <div class="card-body mt-3">
+      <p class="card-text">
+        <b>Title:</b> <%= listing.title %> <br />
+        <b>Description:</b> <%= listing.description %> <br />
+        <b>Price:</b> &#x20A8;<%= listing.price.toLocaleString("en-PK") %>
+        <br />
+        <b>Location:</b> <%= listing.location %> <br />
+        <b>Country:</b> <%= listing.country %>
+      </p>
+    </div>
+  </div>
+  <div class="btns mb-3">
+    <a
+      href="/listings/<%= listing._id %>/edit"
+      class="btn edit-btn col-1 offset-3"
+      >Edit</a
+    >
 
-    <a href="/listings/<%= listing._id %>/edit">Edit this Listing</a>
-    <br /><br />
     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
-      <button>Delete</button>
+      <button class="btn btn-dark offset-5">Delete</button>
     </form>
-  </body>
-</html>
+  </div>
+</div>

@@ -1,19 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h3>All listings</h3>
-    <form action="/listings/new" method="GET">
-      <button>Create new Listing</button>
-    </form>
-    <ul>
-      <%for(let listing of allListings){%>
-      <li><a href="/listings/<%= listing._id %>"><%= listing.title %></a></li>
-      <%}%>
-    </ul>
-  </body>
-</html>
+<% layout("/layouts/boilerplate")-%>
+<body>
+  <h3>All listings</h3>
+  <div
+    class="row row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1"
+  >
+    <% for(let listing of allListings) { %>
+    <div class="col mb-4">
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+        <div class="card">
+          <img
+            src="<%= listing.image %>"
+            class="card-img-top"
+            style="height: 20rem;"
+            alt="Listing image"
+          />
+          <div class="card-img-overlay"></div>
+          <div class="card-body">
+            <h5 class="card-title card-text"><%= listing.title %></h5>
+            <p class="card-text">
+              &#x20A8;<%= listing.price.toLocaleString("en-PK") %> /night
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <% } %>
+  </div>
+</body>
