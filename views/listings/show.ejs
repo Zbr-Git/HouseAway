@@ -1,9 +1,9 @@
 <% layout("/layouts/boilerplate")-%>
 <div class="row mt-3">
-  <div class="col-8 offset-3">
-    <h3>Listing Details</h3>
+  <div class="col-8 offset-2">
+    <h3><%= listing.title %></h3>
   </div>
-  <div class="card col-6 offset-3 show-card">
+  <div class="card listing-card col-8 offset-2 show-card">
     <img
       src="<%= listing.image %>"
       class="card-img-top show-img"
@@ -11,7 +11,6 @@
     />
     <div class="card-body mt-3">
       <p class="card-text">
-        <b>Title:</b> <%= listing.title %> <br />
         <b>Description:</b> <%= listing.description %> <br />
         <b>Price:</b> &#x20A8;<%= listing.price.toLocaleString("en-PK") %>
         <br />
@@ -20,15 +19,103 @@
       </p>
     </div>
   </div>
-  <div class="btns mb-3">
-    <a
-      href="/listings/<%= listing._id %>/edit"
-      class="btn edit-btn col-1 offset-3"
-      >Edit</a
-    >
+  <div class="btns mb-3 col-8 offset-2">
+    <a href="/listings/<%= listing._id %>/edit" class="btn edit-btn">Edit</a>
 
     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
-      <button class="btn btn-dark offset-5">Delete</button>
+      <button class="btn btn-dark ms-2">Delete</button>
     </form>
+  </div>
+
+  <div class="col-8 offset-2 mb-3">
+    <hr />
+    <h4>Leave a Review</h4>
+    <form
+      action="/listings/<%= listing._id %>/reviews"
+      method="POST"
+      novalidate
+      class="needs-validation"
+    >
+      <div class="mb-3 mt-3">
+        <label for="rating" class="form-label">Rating</label>
+        <input
+          type="range"
+          name="review[rating]"
+          class="form-range"
+          min="1"
+          max="5"
+          step="1"
+          id="ratingRange"
+          oninput="updateRating(this.value)"
+        />
+        <div id="ratingValue" class="text-center mt-2 fw-bold text-success">
+          1
+        </div>
+      </div>
+      <div class="mb-3 mt-3">
+        <label for="comment" class="form-label">Comments</label>
+        <textarea
+          required
+          name="review[comment]"
+          id="comment"
+          cols="30"
+          rows="3"
+          class="form-control"
+        ></textarea>
+        <div class="valid-feedback">Comment looks good!</div>
+        <div class="invalid-feedback">Comment is required.</div>
+      </div>
+      <button type="submit" class="btn btn-outline-dark">Submit</button>
+    </form>
+    <hr />
+    <h4>All Reviews</h4>
+    <div class="row mt-3">
+      <% for(review of listing.reviews){ %>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="card">
+          <div class="card-body mt-3 mb-3 mx-3">
+            <h5 class="card-title">
+              <i class="fas fa-user"></i> Jane Doe
+              <div class="dropdown float-end">
+                <button
+                  class="btn btn-sm btn-light dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton-<%= review._id %>"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="dropdownMenuButton-<%= review._id %>"
+                >
+                  <li>
+                    <form
+                      method="POST"
+                      action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                      class="d-inline"
+                    >
+                      <button type="submit" class="dropdown-item">
+                        Delete
+                      </button>
+                    </form>
+                  </li>
+                </ul>
+              </div>
+            </h5>
+            <p class="card-text">
+              <i class="fa-regular fa-comment-dots"></i> <%= review.comment %>
+            </p>
+            <p class="card-text">
+              <i class="fa-solid fa-star" style="color: #ffd43b"></i> Rating:
+              <%= review.rating %>
+            </p>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
   </div>
 </div>

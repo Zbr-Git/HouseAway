@@ -1,11 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
+const Review = require('./models/review.js');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const wrapAsync = require('./utils/wrapAsync.js');
 const ExpressError = require('./utils/ExpressError.js');
-const { listingSchema } = require('./schema.js');
+const { listingSchema, reviewSchema } = require('./schema.js');
 
 const app = express();
 const path = require('path');
@@ -37,9 +38,21 @@ app.get('/', (req, res) => {
   res.send('working');
 });
 
-//Valaidate Request body data
+//Valaidate listing Request body data
 const validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
+
+  if (error) {
+    let errorMsg = error.details.map((el) => el.message).join(',');
+    throw new ExpressError(400, errorMsg);
+  } else {
+    next();
+  }
+};
+
+//Valaidate review Request body data
+const validateReview = (req, res, next) => {
+  let { error } = reviewSchema.validate(req.body);
 
   if (error) {
     let errorMsg = error.details.map((el) => el.message).join(',');
@@ -69,7 +82,7 @@ app.get(
   wrapAsync(async (req, res, next) => {
     try {
       const { id } = req.params;
-      const listing = await Listing.findById(id);
+      const listing = await Listing.findById(id).populate('reviews');
       if (!listing) {
         throw new ExpressError(404, 'Listing not found');
       }
@@ -134,6 +147,36 @@ app.delete(
       console.error(error);
       res.status(500).send('Error deleting listing');
     }
+  })
+);
+
+// Reviews
+// Post Route
+app.post(
+  '/listings/:id/reviews',
+  validateReview,
+  wrapAsync(async (req, res) => {
+    const listing = await Listing.findById(req.params.id);
+
+    const newReview = new Review(req.body.review);
+    await newReview.save();
+
+    listing.reviews.push(newReview);
+    await listing.save();
+
+    res.redirect(`/listings/${req.params.id}`); // Redirect to the listing page
+  })
+);
+
+//Delete Review Route
+app.delete(
+  '/listings/:id/reviews/:reviewId',
+  wrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}#reviews`);
   })
 );
 
