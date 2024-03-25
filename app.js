@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError.js');
+const session = require('express-session');
+const flash = require('connect-flash');
 
 const listings = require('./routes/listing.js');
 const reviews = require('./routes/review.js');
@@ -33,8 +35,24 @@ app.use(methodOverride('_method'));
 // use ejs-locals for all ejs templates:
 app.engine('ejs', ejsMate);
 
+const sessionOptions = {
+  secret: 'bingchilling',
+  resave: true,
+  saveUninitialized: true,
+};
+
 app.get('/', (req, res) => {
   res.send('working');
+});
+
+app.use(session(sessionOptions)); // Middleware for setting up session management
+app.use(flash()); // Middleware for handling flash messages using the connect-flash npm package
+
+// Middleware for making flash messages available in templates
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
 });
 
 app.use('/listings', listings);
