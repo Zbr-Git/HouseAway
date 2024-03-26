@@ -6,6 +6,9 @@ const ExpressError = require('./utils/ExpressError.js');
 const session = require('express-session');
 const flash = require('connect-flash');
 
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user.js');
 const listings = require('./routes/listing.js');
 const reviews = require('./routes/review.js');
 
@@ -48,11 +51,26 @@ app.get('/', (req, res) => {
 app.use(session(sessionOptions)); // Middleware for setting up session management
 app.use(flash()); // Middleware for handling flash messages using the connect-flash npm package
 
+app.use(passport.initialize()); // Middleware that initialise passport
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate())); // Use Static authenticate method of model in LocalStrategy
+passport.serializeUser(User.serializeUser()); // Serialise User into session
+passport.deserializeUser(User.deserializeUser()); //deSerialisiation User into session
+
 // Middleware for making flash messages available in templates
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
+});
+
+app.get('/demouser', async (req, res) => {
+  const fakeUser = new User({
+    email: 'student@gmail.com',
+    username: 'student',
+  });
+  const registerdUser = await User.register(fakeUser, 'hello');
+  res.send(registerdUser);
 });
 
 app.use('/listings', listings);
