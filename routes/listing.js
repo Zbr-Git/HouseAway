@@ -2,21 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Listing = require('../models/listing.js');
 const wrapAsync = require('../utils/wrapAsync.js');
-const ExpressError = require('../utils/ExpressError.js');
-const { listingSchema } = require('../schema.js');
-const { isLoggedIn } = require('../middleware.js');
-
-// Validate listing Request body data middleware
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-
-  if (error) {
-    let errorMsg = error.details.map((el) => el.message).join(',');
-    return next(new ExpressError(400, errorMsg)); // Return the error to the error handling middleware
-  }
-
-  next(); // Call next to proceed to the next middleware or route handler
-};
+const { isLoggedIn, isOwner, validateListing } = require('../middleware.js');
 
 //Index Route
 router.get(
@@ -73,21 +59,15 @@ router.post(
 router.get(
   '/:id/edit',
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
-    try {
-      const { id } = req.params;
-      const listing = await Listing.findById(id);
-      if (!listing) {
-        req.flash('error', 'Requested Listing Does not exist');
-        res.redirect('/listings');
-      }
-      res.render('listings/edit.ejs', { listing });
-    } catch (error) {
-      console.error(error);
-      res
-        .status(500)
-        .send('Error occured while Displaying edit.js listing page');
+    const { id } = req.params;
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      req.flash('error', 'Requested Listing Does not exist');
+      res.redirect('/listings');
     }
+    res.render('listings/edit.ejs', { listing });
   })
 );
 
@@ -95,6 +75,7 @@ router.get(
 router.put(
   '/:id',
   isLoggedIn,
+  isOwner,
   validateListing,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -108,6 +89,7 @@ router.put(
 router.delete(
   '/:id',
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     try {
       const { id } = req.params;
