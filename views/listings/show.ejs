@@ -20,6 +20,7 @@
       </p>
     </div>
   </div>
+  <% if(currentUser && currentUser._id.equals(listing.owner._id)) {%>
   <div class="btns mb-3 col-8 offset-2">
     <a href="/listings/<%= listing._id %>/edit" class="btn edit-btn">Edit</a>
 
@@ -27,6 +28,7 @@
       <button class="btn btn-dark ms-2">Delete</button>
     </form>
   </div>
+  <% } %>
 
   <div class="col-8 offset-2 mb-3">
     <hr />
