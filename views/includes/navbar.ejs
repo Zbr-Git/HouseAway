@@ -1,9 +1,10 @@
 <nav
-  class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top"
+  id="navbar"
+  class="navbar navbar-expand-md navbar-dark bg-dark border-bottom sticky-top"
 >
   <div class="container-fluid">
-    <a class="navbar-brand" href="/"
-      ><img src="/logo.png" alt="Icon" class="logo" />
+    <a class="navbar-brand" href="/listings">
+      <img src="/logo.png" alt="Icon" class="logo" />
     </a>
     <button
       class="navbar-toggler"
@@ -18,10 +19,32 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" aria-current="page" href="/">Home</a>
+        <a class="nav-link" aria-current="page" href="/listings">Home</a>
         <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add Lsiting</a>
+        <a class="nav-link" href="/listings/new">Add Listing</a>
       </div>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Account
+          </a>
+          <div class="dropdown-menu dropdown-menu-end">
+            <% if(!currentUser){ %>
+            <a class="dropdown-item" href="/signup">Sign Up</a>
+            <a class="dropdown-item" href="/login">Log In</a>
+            <% } %> <% if(currentUser){ %>
+
+            <a class="dropdown-item" href="/logout">Log Out</a>
+            <% } %>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

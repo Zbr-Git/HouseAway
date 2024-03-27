@@ -11,6 +11,7 @@
     />
     <div class="card-body mt-3">
       <p class="card-text">
+        <b>Owned by:</b> <%= listing.owner.username %> <br />
         <b>Description:</b> <%= listing.description %> <br />
         <b>Price:</b> &#x20A8;<%= listing.price.toLocaleString("en-PK") %>
         <br />

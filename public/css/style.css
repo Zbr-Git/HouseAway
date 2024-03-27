@@ -14,22 +14,27 @@ body {
 }
 
 .logo {
-  width: 60px;
-  height: auto;
+  width: 150px;
+  height: 15px;
+  margin-bottom: 5px;
+  margin-top: 1px;
 }
 
 .navbar {
-  height: 5rem;
+  height: 4rem;
 }
 
 .nav-link {
   color: #222222 !important;
 }
+#navbar {
+  background-color: #212121 !important;
+}
 
 .f-info {
   text-align: center;
   height: 8rem;
-  background-color: #ebebeb;
+  background-color: #212121;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -42,6 +47,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #ffffff;
 }
 
 .f-info-socials i {
@@ -51,7 +57,7 @@ body {
 
 .f-info-links a {
   text-decoration: none;
-  color: #222222;
+  color: #ffffff;
 }
 .f-info-links a:hover {
   text-decoration: underline;
@@ -127,4 +133,8 @@ body {
 .fa-regular,
 .fa-solid {
   margin-right: 5px; /* Adjust the margin as needed */
+}
+
+.nav-link {
+  color: white !important;
 }
