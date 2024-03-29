@@ -12,22 +12,39 @@ const {
 
 const router = express.Router();
 
+// Refactoring routes further with router.route
+router.route('/signup').get(renderSignUpForm).post(wrapAsync(signup));
+
+router
+  .route('/login')
+  .get(renderLoginForm)
+  .post(
+    saveRedirectUrl,
+    passport.authenticate('local', {
+      failureRedirect: '/login',
+      failureFlash: true,
+    }),
+    login
+  );
+  
+// use the above router.route code or the one below.
+
 // GET route to render the signup page
-router.get('/signup', renderSignUpForm);
+// router.get('/signup', renderSignUpForm);
 
-router.post('/signup', wrapAsync(signup));
+// router.post('/signup', wrapAsync(signup));
 
-router.get('/login', renderLoginForm);
+// router.get('/login', renderLoginForm);
 
-router.post(
-  '/login',
-  saveRedirectUrl,
-  passport.authenticate('local', {
-    failureRedirect: '/login',
-    failureFlash: true,
-  }),
-  login
-);
+// router.post(
+//   '/login',
+//   saveRedirectUrl,
+//   passport.authenticate('local', {
+//     failureRedirect: '/login',
+//     failureFlash: true,
+//   }),
+//   login
+// );
 
 router.get('/logout', logout);
 
