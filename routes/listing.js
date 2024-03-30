@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const wrapAsync = require('../utils/wrapAsync.js');
 const { isLoggedIn, isOwner, validateListing } = require('../middleware.js');
 const {
@@ -17,7 +19,10 @@ const {
 router
   .route('/')
   .get(wrapAsync(index))
-  .post(isLoggedIn, validateListing, wrapAsync(createListing));
+  // .post(isLoggedIn, validateListing, wrapAsync(createListing));
+  .post(upload.single('listing[image]'), (req, res) => {
+    res.send(req.file);
+  });
 
 router.get('/new', isLoggedIn, renderNewForm);
 
