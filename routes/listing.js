@@ -22,8 +22,8 @@ router
   .get(wrapAsync(index))
   .post(
     isLoggedIn,
-    validateListing,
     upload.single('listing[image]'),
+    validateListing,
     wrapAsync(createListing)
   );
 // .post(upload.single('listing[image]'), (req, res) => {
