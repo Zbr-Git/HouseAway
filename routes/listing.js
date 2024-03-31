@@ -35,7 +35,13 @@ router.get('/new', isLoggedIn, renderNewForm);
 router
   .route('/:id')
   .get(wrapAsync(showListing))
-  .put(isLoggedIn, isOwner, validateListing, wrapAsync(updateListing))
+  .put(
+    isLoggedIn,
+    isOwner,
+    upload.single('listing[image]'),
+    validateListing,
+    wrapAsync(updateListing)
+  )
   .delete(isLoggedIn, isOwner, wrapAsync(destroyListing));
 
 // Either use the router.route to make the code more simpler or use the one below to keep it simple
