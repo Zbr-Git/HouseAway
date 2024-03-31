@@ -138,3 +138,9 @@ body {
 .nav-link {
   color: white !important;
 }
+
+/* MAP */
+#map {
+  height: 400px;
+  width: 100vh;
+}
