@@ -2,7 +2,6 @@ if (process.env.NODE_ENV != 'production') {
   require('dotenv').config();
 }
 
-
 const express = require('express');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
@@ -51,9 +50,9 @@ const sessionOptions = {
   saveUninitialized: true,
 };
 
-app.get('/', (req, res) => {
-  res.send('working');
-});
+// app.get('/', (req, res) => {
+//   res.send('working');
+// });
 
 app.use(session(sessionOptions)); // Middleware for setting up session management
 app.use(flash()); // Middleware for handling flash messages using the connect-flash npm package

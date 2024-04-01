@@ -14,14 +14,23 @@
       alt="listing_image"
     />
     <div class="card-body mt-3">
-      <p class="card-text">
-        <b>Owned by:</b> <%= listing.owner.username %> <br />
-        <b>Description:</b> <%= listing.description %> <br />
-        <b>Price:</b> &#x20A8;<%= listing.price.toLocaleString("en-PK") %>
-        <br />
-        <b>Location:</b> <%= listing.location %> <br />
-        <b>Country:</b> <%= listing.country %>
-      </p>
+      <span class="card-text"
+        ><b>Owned by:</b> <%= listing.owner.username %></span
+      ><br />
+      <span class="card-text"
+        ><b>Description:</b> <%= listing.description %></span
+      ><br />
+      <span class="card-text">
+        <b>Price:</b> ₨<%= listing.price.toLocaleString("en-PK") %> </span
+      ><br />
+      <span class="card-text"><b>Location:</b> <%= listing.location %></span
+      ><br />
+      <span class="card-text"><b>Country:</b> <%= listing.country %></span
+      ><br />
+      <span class="card-text">
+        <b>Category:</b>
+        <span class="badge bg-primary"> <%= listing.category %></span>
+      </span>
     </div>
   </div>
   <% if(currentUser && currentUser._id.equals(listing.owner._id)) {%>

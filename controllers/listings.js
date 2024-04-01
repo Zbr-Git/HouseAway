@@ -6,7 +6,7 @@ const Listing = require('../models/listing');
 
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
-  res.render('listings/index.ejs', { allListings });
+  res.render('listings/index.ejs', { allListings, categorySelected: false });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -49,6 +49,7 @@ module.exports.createListing = async (req, res, next) => {
   let filename = req.file.filename;
 
   const newListing = new Listing(req.body.listing);
+
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
   newListing.geometry = response.body.features[0].geometry;

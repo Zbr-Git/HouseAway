@@ -37,6 +37,23 @@ const listingSchema = new Schema({
       required: true,
     },
   },
+  category: {
+    type: String,
+    enum: [
+      'trending',
+      'rooms',
+      'iconic_city',
+      'amazing_pools',
+      'camping',
+      'beach',
+      'castles',
+      'countryside',
+      'apartments',
+      'boats',
+      'campers',
+    ],
+    required: true,
+  },
 });
 
 // Define a post middleware function for the 'findOneAndDelete' hook of the listingSchema
