@@ -8,6 +8,7 @@ const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError.js');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 
 const passport = require('passport');
@@ -21,7 +22,9 @@ const userRouter = require('./routes/user.js');
 const app = express();
 const path = require('path');
 
-const MONGO_URL = 'mongodb://127.0.0.1:27017/listingdb';
+// const MONGO_URL = 'mongodb://127.0.0.1:27017/listingdb';  // Local MongoDB Connection
+
+const MONGO_URL = process.env.MONGO_ATLAS_URL;
 
 main()
   .then((res) => console.log('Database Connection Successful'))
@@ -44,10 +47,28 @@ app.use(methodOverride('_method'));
 // use ejs-locals for all ejs templates:
 app.engine('ejs', ejsMate);
 
+const store = MongoStore.create({
+  mongoUrl: MONGO_URL,
+  crypto: {
+    secret: process.env.SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on('error', () => {
+  console.log('Error in MONGO Session Store', err);
+});
+
 const sessionOptions = {
-  secret: 'bingchilling',
-  resave: true,
+  store: store,
+  secret: process.env.SECRET,
+  resave: false,
   saveUninitialized: true,
+  cookie: {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Set expiration date
+    maxAge: 7 * 24 * 60 * 60 * 1000, // Optional: Set max age in milliseconds
+    httpOnly: true,
+  },
 };
 
 // app.get('/', (req, res) => {
