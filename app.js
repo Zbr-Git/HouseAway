@@ -71,6 +71,11 @@ const sessionOptions = {
   },
 };
 
+// Define route for the root URL
+app.get('/', (req, res) => {
+  res.redirect('/listings');
+});
+
 // app.get('/', (req, res) => {
 //   res.send('working');
 // });
