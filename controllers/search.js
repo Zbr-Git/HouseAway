@@ -5,7 +5,8 @@ module.exports.search = async (req, res) => {
     const searchQuery = req.query.searchquery;
     // Check if the search query is empty
     if (!searchQuery) {
-      return res.status(400).send('Search query cannot be empty');
+      req.flash('error', 'Please enter something to search for.');
+      res.redirect('/listings');
     }
     // Search for listings with titles, descriptions, or locations containing the search query
     const filteredListings = await Listing.find({
