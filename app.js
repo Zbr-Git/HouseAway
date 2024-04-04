@@ -18,6 +18,7 @@ const User = require('./models/user.js');
 const listingRouter = require('./routes/listing.js');
 const reviewRouter = require('./routes/review.js');
 const userRouter = require('./routes/user.js');
+const searchRouter = require('./routes/search.js');
 
 const app = express();
 const path = require('path');
@@ -93,7 +94,8 @@ passport.deserializeUser(User.deserializeUser()); //deSerialisiation User into s
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
-  res.locals.currentUser = req.user;
+  res.locals.currentUser = req.user || null;
+  console.log('Current User in Middleware:', res.locals.currentUser);
   next();
 });
 
@@ -106,6 +108,7 @@ app.use((req, res, next) => {
 //   res.send(registerdUser);
 // });
 
+app.use('/', searchRouter);
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRouter);
 app.use('/', userRouter);
